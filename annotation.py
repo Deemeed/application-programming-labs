@@ -1,6 +1,5 @@
 import csv
 import os
-from msilib.text import dirname
 
 
 def make_annotation(annotation_file: str, img_dir: str) -> None:
