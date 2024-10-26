@@ -1,6 +1,6 @@
 import argparse
-from download import download_images
 from annotation import make_annotation
+from download import download_images
 from iterator import Iterator
 
 
