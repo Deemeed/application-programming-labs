@@ -23,7 +23,10 @@ def main():
     try:
         image = read_image(img)
         print_size(image)
-        create_histogram(image)
+
+        histogram = create_histogram(image)
+        print_histogram(histogram)
+
         binary_image = make_binary(img)
         print_difference(image, binary_image)
         save_image(file, binary_image)

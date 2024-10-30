@@ -25,23 +25,34 @@ def print_size(image: np.ndarray) -> None:
 
     print(image.shape)
 
-def create_histogram(image: np.ndarray) -> None:
+def create_histogram(image: np.ndarray) -> list[np.ndarray]:
 
     """
-    Creating and printing the histogram of image
+    Creating the histogram of image
     :param image: Original image
-    :return: None
+    :return: list with histograms for R, G, B
     """
 
+    hist = []
     color = ('blue', 'green', 'red')
     for i, col in enumerate(color):
         histr = cv2.calcHist([image], [i], None, [256], [0, 256])
-        plt.plot(histr, label = col + ' channel', color=col)
+        hist.append(histr)
+
+    return hist
+
+def print_histogram(hist: list[np.ndarray]) -> None:
+    color = ('blue', 'green', 'red')
+    for i, col in enumerate(color):
+        histr = hist[i]
+        plt.plot(histr, label=col + ' channel', color=col)
         plt.xlim([0, 256])
+
     plt.title('Histogram')
-    plt.xlabel("pixel's tone")
-    plt.ylabel('frequency')
+    plt.xlabel("Pixel Values")
+    plt.ylabel('No. of pixels')
     plt.legend()
+
     plt.show()
 
 def make_binary(img: str) -> np.ndarray:
