@@ -9,6 +9,11 @@ from iterator import Iterator
 
 class MainWindow(QMainWindow):
     def __init__(self):
+        
+        """
+        Constructor of main window
+        """
+        
         super().__init__()
 
         self.iterator = None
@@ -34,6 +39,12 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(container)
 
     def select_file(self):
+
+        """
+        Open dialog window by pushing the 'Select' button to get file path
+        :return: None
+        """
+        
         img_dir, ok = QInputDialog.getText(self, "Selecting file", "Enter path to file: ")
         if ok & os.path.exists(img_dir):
             self.iterator = Iterator(img_dir)
@@ -42,6 +53,12 @@ class MainWindow(QMainWindow):
             self.image_label.setText("Please try other path")
 
     def next_image(self):
+
+        """
+        Showing next image py pushing the 'Next' button
+        :return: None
+        """
+        
         if not self.iterator:
             self.image_label.setText("Firstly select a file to read!")
             return
