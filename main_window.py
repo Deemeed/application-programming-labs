@@ -1,19 +1,19 @@
-import os.path
 import sys
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap
-from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QPushButton, QInputDialog, QVBoxLayout, QWidget
+from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QPushButton, QVBoxLayout, QWidget, \
+    QFileDialog, QMessageBox
 from iterator import Iterator
 
 
 class MainWindow(QMainWindow):
     def __init__(self):
-        
+
         """
         Constructor of main window
         """
-        
+
         super().__init__()
 
         self.iterator = None
@@ -44,31 +44,40 @@ class MainWindow(QMainWindow):
         Open dialog window by pushing the 'Select' button to get file path
         :return: None
         """
-        
-        img_dir, ok = QInputDialog.getText(self, "Selecting file", "Enter path to file: ")
-        if ok & os.path.exists(img_dir):
-            self.iterator = Iterator(img_dir)
-            self.next_image()
-        else:
-            self.image_label.setText("Please try other path")
+
+        file = QFileDialog.getExistingDirectory(self, "Selecting file", "C:/Users/user/PycharmProjects/lab5")
+        self.iterator = Iterator(file)
+        self.next_image()
 
     def next_image(self):
 
         """
-        Showing next image py pushing the 'Next' button
+        Showing next image by pushing the 'Next' button
         :return: None
         """
-        
+
         if not self.iterator:
-            self.image_label.setText("Firstly select a file to read!")
+            msg_box = QMessageBox()
+            msg_box.setIcon(QMessageBox.Information)
+            msg_box.setText("Wrong directory selected")
+            msg_box.setWindowTitle("Error")
+            msg_box.setStandardButtons(QMessageBox.Ok)
+
+            msg_box.exec_()
             return
 
-        image = self.iterator.__next__()
+        image = next(self.iterator)
         if image:
             pixmap = QPixmap(image)
             self.image_label.setPixmap(pixmap)
         else:
-            self.image_label.setText("No images left!")
+            msg_box = QMessageBox()
+            msg_box.setIcon(QMessageBox.Information)
+            msg_box.setText("No images left!")
+            msg_box.setWindowTitle("Error")
+            msg_box.setStandardButtons(QMessageBox.Ok)
+
+            msg_box.exec_()
 
 
 if __name__ == "__main__":
