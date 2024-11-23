@@ -45,7 +45,10 @@ class MainWindow(QMainWindow):
         :return: None
         """
 
-        file = QFileDialog.getExistingDirectory(self, "Selecting file", "C:/Users/user/PycharmProjects/lab5")
+        options = QFileDialog.Options()
+        options |= QFileDialog.ReadOnly
+        options |= QFileDialog.DontUseNativeDialog
+        file = QFileDialog.getExistingDirectory(self, "Select Directory", "", options=options)
         self.iterator = Iterator(file)
         self.next_image()
 
