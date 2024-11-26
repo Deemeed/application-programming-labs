@@ -16,6 +16,7 @@ class MainWindow(QMainWindow):
 
         super().__init__()
 
+        self.file = None
         self.iterator = None
         self.setWindowTitle("LAB5 DATASET VIEWER")
         self.setFixedSize(1200, 900)
@@ -45,12 +46,16 @@ class MainWindow(QMainWindow):
         :return: None
         """
 
+        self.image_label.setText("Selecting file...")
         options = QFileDialog.Options()
         options |= QFileDialog.ReadOnly
         options |= QFileDialog.DontUseNativeDialog
         file = QFileDialog.getExistingDirectory(self, "Select Directory", "", options=options)
-        self.iterator = Iterator(file)
-        self.next_image()
+        if file:
+            self.iterator = Iterator(file)
+            self.next_image()
+        else:
+            self.show_message("File have not been opened")
 
     def next_image(self):
 
@@ -60,28 +65,27 @@ class MainWindow(QMainWindow):
         """
 
         if not self.iterator:
-            msg_box = QMessageBox()
-            msg_box.setIcon(QMessageBox.Information)
-            msg_box.setText("Wrong directory selected")
-            msg_box.setWindowTitle("Error")
-            msg_box.setStandardButtons(QMessageBox.Ok)
-
-            msg_box.exec_()
+            self.show_message("Select directory first!")
             return
 
-        image = next(self.iterator)
-        if image:
+        try:
+            image = next(self.iterator)
             pixmap = QPixmap(image)
             self.image_label.setPixmap(pixmap)
-        else:
-            msg_box = QMessageBox()
-            msg_box.setIcon(QMessageBox.Information)
-            msg_box.setText("No images left!")
-            msg_box.setWindowTitle("Error")
-            msg_box.setStandardButtons(QMessageBox.Ok)
+        except StopIteration:
+            self.show_message("Error!")
 
-            msg_box.exec_()
+    def show_message(self, text: str):
 
+        """
+        Warning window
+        """
+
+        msg = QMessageBox()
+        msg.setWindowTitle("Warning")
+        msg.setText(text)
+        msg.setIcon(QMessageBox.Warning)
+        msg.exec_()
 
 if __name__ == "__main__":
     try:
